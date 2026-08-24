@@ -63,6 +63,9 @@ export const downloads = {
     },
   ],
   pending: "即将开放",
+  /** 下载密码的 SHA-256（减速带：产物在公开 GitHub Release 上，直链可绕过）。
+      换密码：printf '<新密码>' | shasum -a 256 */
+  passwordHash: "02e475e7634ce7248bcb149ede47e21ff0e4babd8d9a24d9388ee837607edadf",
 } as const;
 
 /** 没有后端，先用一封预填好的邮件顶着。接上表单服务时换掉 href 即可。 */

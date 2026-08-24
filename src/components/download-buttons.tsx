@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { downloads } from "@/lib/content";
 
 type Size = "default" | "large";
@@ -5,53 +8,164 @@ type Size = "default" | "large";
 /**
  * 两个安装口。`href` 为空的平台还没有产物，渲染成不可点的"即将开放"，
  * 但位置一直占着 —— 免得发布当天再来改版式。
+ *
+ * 下载前有一道密码门（减速带，不是保险箱）：客户端只存 SHA-256 哈希，
+ * bundle 里翻不到明文；但产物本体在公开 GitHub Release 上，知道直链就能绕过。
+ * 真要锁死得换私有分发渠道。
  */
 export function DownloadButtons({ size = "default" }: { size?: Size }) {
   const large = size === "large";
+  // 密码门当前拦着哪个下载。null = 关着
+  const [gate, setGate] = useState<{ href: string; os: string } | null>(null);
 
   return (
-    <ul className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-      {downloads.items.map((item) => {
-        const available = item.href.length > 0;
-        const label = available ? `下载 for ${item.os}` : `${item.os} ${downloads.pending}`;
+    <>
+      <ul className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        {downloads.items.map((item) => {
+          const available = item.href.length > 0;
+          const label = available ? `下载 for ${item.os}` : `${item.os} ${downloads.pending}`;
 
-        const inner = (
-          <>
-            <OsIcon name={item.icon} />
-            <span className="flex flex-col items-start leading-tight">
-              <span className={large ? "text-[16px] font-medium" : "text-[15px] font-medium"}>
-                {label}
+          const inner = (
+            <>
+              <OsIcon name={item.icon} />
+              <span className="flex flex-col items-start leading-tight">
+                <span className={large ? "text-[16px] font-medium" : "text-[15px] font-medium"}>
+                  {label}
+                </span>
+                <span className="mt-1 font-mono text-[11px] tracking-[0.1em] text-ink-faint">
+                  {item.note}
+                </span>
               </span>
-              <span className="mt-1 font-mono text-[11px] tracking-[0.1em] text-ink-faint">
-                {item.note}
-              </span>
-            </span>
-          </>
-        );
+            </>
+          );
 
-        const shape = `pressable flex items-center gap-3 border ${large ? "px-6 py-4" : "px-5 py-3.5"}`;
+          const shape = `pressable flex items-center gap-3 border ${large ? "px-6 py-4" : "px-5 py-3.5"}`;
 
-        return (
-          <li key={item.os}>
-            {available ? (
-              <a
-                href={item.href}
-                className={`${shape} border-ink bg-ink text-paper hover:opacity-90`}
-              >
-                {inner}
-              </a>
-            ) : (
-              <span
-                aria-disabled="true"
-                className={`${shape} cursor-default border-line text-ink-soft`}
-              >
-                {inner}
-              </span>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+          return (
+            <li key={item.os}>
+              {available ? (
+                <button
+                  type="button"
+                  onClick={() => setGate({ href: item.href, os: item.os })}
+                  className={`${shape} border-ink bg-ink text-paper hover:opacity-90`}
+                >
+                  {inner}
+                </button>
+              ) : (
+                <span
+                  aria-disabled="true"
+                  className={`${shape} cursor-default border-line text-ink-soft`}
+                >
+                  {inner}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      {gate && <PasswordGate gate={gate} onClose={() => setGate(null)} />}
+    </>
+  );
+}
+
+async function sha256Hex(text: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function PasswordGate({ gate, onClose }: { gate: { href: string; os: string }; onClose: () => void }) {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  // 入场动画的 data-mounted 替身：hidden 态首渲染，下一帧翻真，transition 接管
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true));
+    inputRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  const submit = async () => {
+    if (busy || value.length === 0) return;
+    setBusy(true);
+    const ok = (await sha256Hex(value)) === downloads.passwordHash;
+    if (ok) {
+      onClose();
+      window.location.href = gate.href;
+    } else {
+      setError(true);
+      setBusy(false);
+      inputRef.current?.select();
+    }
+  };
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`下载 ${gate.os} 安装包`}
+      data-mounted={mounted}
+      className="group fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-6
+        transition-opacity duration-200 data-[mounted=false]:opacity-0"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-[340px] border border-line bg-paper-raised p-6
+          transition-[transform,opacity] duration-200 [transition-timing-function:var(--ease-out)]
+          group-data-[mounted=false]:scale-[0.97] group-data-[mounted=false]:opacity-0
+          motion-reduce:group-data-[mounted=false]:scale-100"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="text-[15px] font-medium text-ink">下载 {gate.os} 安装包</p>
+        <p className="mt-1 text-[12.5px] text-ink-soft">内测阶段，输入下载密码继续。</p>
+        <form
+          className="mt-4 flex flex-col gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void submit();
+          }}
+        >
+          <input
+            ref={inputRef}
+            type="password"
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value);
+              setError(false);
+            }}
+            placeholder="下载密码"
+            autoComplete="off"
+            className="border border-line bg-paper px-3 py-2 text-[14px] text-ink placeholder:text-ink-faint"
+          />
+          {error && <p className="text-[12px] text-ink-soft">密码不对，再试一次。</p>}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="pressable flex-1 border border-line px-4 py-2 text-[13px] text-ink-soft hover:text-ink"
+            >
+              取消
+            </button>
+            <button
+              type="submit"
+              disabled={busy || value.length === 0}
+              className="pressable flex-1 border border-ink bg-ink px-4 py-2 text-[13px] text-paper hover:opacity-90 disabled:opacity-50"
+            >
+              下载
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 
