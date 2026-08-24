@@ -55,7 +55,12 @@ export const downloads = {
       note: "Apple Silicon · .dmg",
       href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.1/Mr.Otto-1.0.1-arm64.dmg",
     },
-    { os: "Windows", icon: "windows", note: "Windows 10 及以上 · .exe", href: "" },
+    {
+      os: "Windows",
+      icon: "windows",
+      note: "Windows 10 及以上 · x64 · .exe",
+      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.1/Mr.Otto-1.0.1-win-x64-setup.exe",
+    },
   ],
   pending: "即将开放",
 } as const;
