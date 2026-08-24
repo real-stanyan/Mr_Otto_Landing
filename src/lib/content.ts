@@ -49,7 +49,12 @@ export const models: { caption: string; items: ModelLogo[] } = {
  */
 export const downloads = {
   items: [
-    { os: "macOS", icon: "apple", note: "Apple Silicon / Intel · .dmg", href: "" },
+    {
+      os: "macOS",
+      icon: "apple",
+      note: "Apple Silicon · .dmg",
+      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.0/Mr.Otto-1.0.0-arm64.dmg",
+    },
     { os: "Windows", icon: "windows", note: "Windows 10 及以上 · .exe", href: "" },
   ],
   pending: "即将开放",
