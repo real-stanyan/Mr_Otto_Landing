@@ -53,7 +53,7 @@ export const downloads = {
       os: "macOS",
       icon: "apple",
       note: "Apple Silicon · .dmg",
-      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.0/Mr.Otto-1.0.0-arm64.dmg",
+      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.1/Mr.Otto-1.0.1-arm64.dmg",
     },
     { os: "Windows", icon: "windows", note: "Windows 10 及以上 · .exe", href: "" },
   ],
