@@ -24,29 +24,33 @@ export default function Home() {
           <OttoOrbit />
         </section>
 
-        {/* 右：白色背景盖住波纹 + 内容 */}
-        <section className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[35vw]">
-          <div className="w-full max-w-xl px-7 lg:px-14">
+        {/* 右：白色背景盖住波纹 + Apple 官网式排版 */}
+        <section
+          className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[35vw]"
+          style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif' }}
+        >
+          <div className="w-full max-w-md px-7 lg:px-12">
 
-            <h1 className="mt-[clamp(0.75rem,2.5vh,1.5rem)] text-[clamp(2rem,min(4.4vw,8.5vh),4rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
+            <h1 className="mt-[clamp(0.75rem,2vh,1.5rem)] text-[clamp(2.25rem,min(4.6vw,9vh),3.5rem)] leading-[1.04] font-bold tracking-[-0.03em] text-[#1d1d1f]">
               {hero.headline[0]}
               <br />
-              <span className="text-ink-soft">{hero.headline[1]}</span>
+              {hero.headline[1]}
             </h1>
 
-            <p className="mt-[clamp(1rem,3vh,1.5rem)] hidden max-w-xl text-[15px] leading-[1.7] text-ink-soft [@media(min-height:640px)]:block sm:text-[16px]">
+            <p className="mt-[clamp(1.25rem,3.5vh,1.75rem)] hidden max-w-[34ch] text-[17px] leading-[1.65] text-[#6e6e73] [@media(min-height:640px)]:block">
               {hero.subhead}
             </p>
 
-            <div className="mt-[clamp(1.25rem,4vh,2rem)] flex flex-wrap items-center gap-x-7 gap-y-4">
+            <div className="mt-[clamp(1.75rem,5vh,2.5rem)]">
               <DownloadButtons />
-              <a
-                href={notify.href}
-                className="underline-grow text-[14px] text-ink-soft hover:text-ink"
-              >
-                {notify.label} →
-              </a>
             </div>
+
+            <a
+              href={notify.href}
+              className="mt-[clamp(1.25rem,3.5vh,1.75rem)] inline-block text-[15px] text-[#0071e3] hover:underline"
+            >
+              {notify.label} →
+            </a>
           </div>
         </section>
       </main>
