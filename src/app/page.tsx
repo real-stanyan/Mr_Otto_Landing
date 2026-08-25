@@ -1,7 +1,7 @@
 import Dither from "@/components/dither-background";
 import { DownloadButtons } from "@/components/download-buttons";
 import { OttoOrbit } from "@/components/otto-orbit";
-import { hero, notify } from "@/lib/content";
+import { hero } from "@/lib/content";
 
 /**
  * 分屏一屏：左边深色 Dither 波纹 + 脑壳开瓢头像，右边白色背景 + 文案下载。
@@ -38,14 +38,8 @@ export default function Home() {
               {hero.subhead}
             </p>
 
-            <div className="mt-[clamp(1.25rem,4vh,2rem)] flex flex-wrap items-center gap-x-7 gap-y-4">
+            <div className="mt-[clamp(1.25rem,4vh,2rem)]">
               <DownloadButtons />
-              <a
-                href={notify.href}
-                className="underline-grow text-[14px] text-ink-soft hover:text-ink"
-              >
-                {notify.label} →
-              </a>
             </div>
           </div>
         </section>

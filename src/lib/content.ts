@@ -65,11 +65,3 @@ export const downloads = {
 } as const;
 
 /** 没有后端，先用一封预填好的邮件顶着。接上表单服务时换掉 href 即可。 */
-export const notify = {
-  label: "发布时通知我",
-  href:
-    "mailto:hi@mrotto.app?subject=" +
-    encodeURIComponent("Mr. Otto 发布通知") +
-    "&body=" +
-    encodeURIComponent("想要的平台（macOS / Windows）："),
-} as const;
