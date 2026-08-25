@@ -11,15 +11,13 @@ export function DownloadButtons() {
         const available = item.href.length > 0;
         const label = available ? `下载 for ${item.os}` : `${item.os} ${downloads.pending}`;
 
-        const shape = available
-          ? "pressable flex w-full items-center justify-center gap-3 rounded-full bg-[#0071e3] px-6 py-3 text-white transition-colors hover:bg-[#0077ed]"
-          : "flex w-full items-center justify-center gap-3 rounded-full border border-[#d2d2d7] bg-transparent px-6 py-3 text-ink-soft";
+        const shape = "pressable flex w-full items-center justify-center gap-3 border px-5 py-3.5 border-ink bg-ink text-paper hover:opacity-90";
         const inner = (
           <>
             <OsIcon name={item.icon} />
             <span className="flex flex-col items-start leading-tight">
               <span className="text-[15px] font-medium">{label}</span>
-              <span className={`mt-1 font-mono text-[11px] tracking-[0.1em] ${available ? "text-white/70" : "text-ink-faint"}`}>
+              <span className="mt-1 font-mono text-[11px] tracking-[0.1em] text-ink-faint">
                 {item.note}
               </span>
             </span>
@@ -33,7 +31,7 @@ export function DownloadButtons() {
                 {inner}
               </a>
             ) : (
-              <span aria-disabled="true" className={`${shape} cursor-default`}>
+              <span aria-disabled="true" className={`${shape} cursor-default border-line bg-transparent text-ink-soft`}>
                 {inner}
               </span>
             )}
