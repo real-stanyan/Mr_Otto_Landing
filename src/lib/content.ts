@@ -15,11 +15,10 @@ export const site = {
 } as const;
 
 export const hero = {
-  eyebrow: "私测中 · 安装包即将开放",
-  headline: ["活给 Otto，", "人去打牌。"],
+  eyebrow: "公测开放 · 两个平台都可以装",
+  headline: ["活给 Otto，", "人去过日子。"],
   subhead:
-    "你去打牌，Otto 在你自己机器上干活：读文件、跑 bash、搜网页。每一步都记进日志，危险的那几步它不敢动，等你回来点头。",
-  crowdCaption: "人去打牌，Otto 先生在干活。",
+    "Otto 在你自己机器上干活：读文件、跑 bash、搜网页。每一步都记进日志，危险的那几步它不敢动，等你回来点头。",
 } as const;
 
 /**
@@ -63,9 +62,6 @@ export const downloads = {
     },
   ],
   pending: "即将开放",
-  /** 下载密码的 SHA-256（减速带：产物在公开 GitHub Release 上，直链可绕过）。
-      换密码：printf '<新密码>' | shasum -a 256 */
-  passwordHash: "02e475e7634ce7248bcb149ede47e21ff0e4babd8d9a24d9388ee837607edadf",
 } as const;
 
 /** 没有后端，先用一封预填好的邮件顶着。接上表单服务时换掉 href 即可。 */

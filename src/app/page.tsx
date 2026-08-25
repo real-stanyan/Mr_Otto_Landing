@@ -20,7 +20,7 @@ export default function Home() {
 
       <main className="relative z-10 flex h-full flex-col lg:flex-row">
         {/* 左：深色波纹 + 头像 */}
-        <section className="flex h-[44%] shrink-0 flex-col items-center justify-center gap-3 lg:h-full lg:w-[42%]">
+        <section className="flex h-[44%] shrink-0 flex-col items-center justify-center gap-3 lg:h-full lg:w-[50vw]">
           <OttoOrbit />
           <p className="font-mono text-[11px] tracking-[0.16em] text-ink-faint">
             {models.caption}
@@ -28,7 +28,7 @@ export default function Home() {
         </section>
 
         {/* 右：白色背景盖住波纹 + 内容 */}
-        <section className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[58%]">
+        <section className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[50vw]">
           <div className="w-full max-w-xl px-7 lg:px-14">
             <p className="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.18em] text-ink-soft uppercase sm:text-[12px]">
               <span className="inline-block size-1.5 bg-brand" aria-hidden />
