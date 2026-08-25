@@ -18,6 +18,17 @@
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
+.theme-light {
+  --paper: #ffffff;
+  --paper-raised: #fafafa;
+  --ink: #101011;
+  --ink-soft: #56555a;
+  --ink-faint: #8c8b90;
+  --line: rgba(16, 16, 17, 0.14);
+  --line-strong: rgba(16, 16, 17, 0.9);
+  --brand: #4a70a9;
+}
+
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);

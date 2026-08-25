@@ -4,38 +4,38 @@ import { OttoOrbit } from "@/components/otto-orbit";
 import { hero, models, notify } from "@/lib/content";
 
 /**
- * 极简一屏：整页锁死 100svh，Dither 波纹 shader 铺满当背景，
- * 头像在左、标题 + 下载按钮在右。没有 header、没有滚动条。
+ * 分屏一屏：左边深色 Dither 波纹 + 脑壳开瓢头像，右边白色背景 + 文案下载。
+ * 整页锁死 100svh，两个方向都不许滚动。
  *
- * 背景 canvas 是绝对定位垫底（z-0），内容层盖在上面（z-10），
- * 波纹的鼠标交互透过空白区域仍然生效。
+ * 移动端上下分屏（上头像下内容），桌面端左右分屏（左头像右内容）。
+ * 右边白色区盖住底下的波纹，内部文字用 .theme-light 那套浅色 token。
  */
 export default function Home() {
   return (
     <div className="relative flex h-[100svh] flex-col overflow-hidden bg-[#0a0a0b] text-ink">
-      {/* 全屏 dither 波纹背景 */}
+      {/* 全屏 dither 波纹背景（深色），只有左边露出来 */}
       <div className="absolute inset-0" aria-hidden>
         <Dither />
       </div>
 
-      <main className="relative z-10 flex min-h-0 flex-1 items-center justify-center">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-y-10 px-6 lg:flex-row lg:justify-between lg:gap-x-14">
-          {/* 左：脑壳开瓢的头像 */}
-          <div className="flex shrink-0 flex-col items-center gap-3">
-            <OttoOrbit />
-            <p className="font-mono text-[11px] tracking-[0.16em] text-ink-faint">
-              {models.caption}
-            </p>
-          </div>
+      <main className="relative z-10 flex h-full flex-col lg:flex-row">
+        {/* 左：深色波纹 + 头像 */}
+        <section className="flex h-[44%] shrink-0 flex-col items-center justify-center gap-3 lg:h-full lg:w-[42%]">
+          <OttoOrbit />
+          <p className="font-mono text-[11px] tracking-[0.16em] text-ink-faint">
+            {models.caption}
+          </p>
+        </section>
 
-          {/* 右：标题 + 下载 */}
-          <div className="min-w-0 max-w-xl">
+        {/* 右：白色背景盖住波纹 + 内容 */}
+        <section className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[58%]">
+          <div className="w-full max-w-xl px-7 lg:px-14">
             <p className="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.18em] text-ink-soft uppercase sm:text-[12px]">
               <span className="inline-block size-1.5 bg-brand" aria-hidden />
               {hero.eyebrow}
             </p>
 
-            <h1 className="mt-[clamp(0.75rem,2.5vh,1.5rem)] text-[clamp(2.1rem,min(5.4vw,9vh),4.5rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
+            <h1 className="mt-[clamp(0.75rem,2.5vh,1.5rem)] text-[clamp(2rem,min(4.4vw,8.5vh),4rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
               {hero.headline[0]}
               <br />
               <span className="text-ink-soft">{hero.headline[1]}</span>
@@ -55,7 +55,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );
