@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable react/no-unknown-property -- react-three-fiber JSX 属性不是标准 DOM 属性 */
-import { useRef, useEffect, forwardRef, useSyncExternalStore } from 'react';
+import { useRef, useEffect, forwardRef, useMemo, useSyncExternalStore } from 'react';
 import type React from 'react';
 import { Canvas, useFrame, useThree, ThreeEvent } from '@react-three/fiber';
 import { EffectComposer, wrapEffect } from '@react-three/postprocessing';
@@ -215,45 +215,49 @@ function DitheredWaves({
   const mouseRef = useRef(new THREE.Vector2());
   const { viewport, size, gl } = useThree();
 
-  const waveUniformsRef = useRef<WaveUniforms>({
-    time: new THREE.Uniform(0),
-    resolution: new THREE.Uniform(new THREE.Vector2(0, 0)),
-    waveSpeed: new THREE.Uniform(waveSpeed),
-    waveFrequency: new THREE.Uniform(waveFrequency),
-    waveAmplitude: new THREE.Uniform(waveAmplitude),
-    waveColor: new THREE.Uniform(new THREE.Color(...waveColor)),
-    mousePos: new THREE.Uniform(new THREE.Vector2(0, 0)),
-    enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
-    mouseRadius: new THREE.Uniform(mouseRadius)
-  });
+  // 初始 uniforms 只作初始值。fiber >= 9.4 对 ShaderMaterial 的 uniforms 做 spread 拷贝
+  // 而不是保持引用：useRef 里的对象和 material.uniforms 是两份。动画必须直接写
+  // material.uniforms（渲染真正读的那份），否则 time 永远停在初始值、画面静止。
+  const initialUniforms = useMemo<WaveUniforms>(
+    () => ({
+      time: new THREE.Uniform(0),
+      resolution: new THREE.Uniform(new THREE.Vector2(0, 0)),
+      waveSpeed: new THREE.Uniform(waveSpeed),
+      waveFrequency: new THREE.Uniform(waveFrequency),
+      waveAmplitude: new THREE.Uniform(waveAmplitude),
+      waveColor: new THREE.Uniform(new THREE.Color(...waveColor)),
+      mousePos: new THREE.Uniform(new THREE.Vector2(0, 0)),
+      enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
+      mouseRadius: new THREE.Uniform(mouseRadius),
+    }),
+    // 只取首帧 props 作初始值，后续变化由 useFrame 逐帧同步
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   useEffect(() => {
     const dpr = gl.getPixelRatio();
     const newWidth = Math.floor(size.width * dpr);
     const newHeight = Math.floor(size.height * dpr);
-    const currentRes = waveUniformsRef.current.resolution.value;
-    if (currentRes.x !== newWidth || currentRes.y !== newHeight) {
-      currentRes.set(newWidth, newHeight);
+    const material = mesh.current?.material as THREE.ShaderMaterial | undefined;
+    const res = material?.uniforms?.resolution;
+    if (res && (res.value.x !== newWidth || res.value.y !== newHeight)) {
+      res.value.set(newWidth, newHeight);
     }
   }, [size, gl]);
 
-  const prevColor = useRef([...waveColor]);
   useFrame(({ clock }) => {
-    const u = waveUniformsRef.current;
+    const material = mesh.current?.material as THREE.ShaderMaterial | undefined;
+    const u = material?.uniforms;
+    if (!u) return;
 
     if (!disableAnimation) {
       u.time.value = clock.getElapsedTime();
     }
-
-    if (u.waveSpeed.value !== waveSpeed) u.waveSpeed.value = waveSpeed;
-    if (u.waveFrequency.value !== waveFrequency) u.waveFrequency.value = waveFrequency;
-    if (u.waveAmplitude.value !== waveAmplitude) u.waveAmplitude.value = waveAmplitude;
-
-    if (!prevColor.current.every((v, i) => v === waveColor[i])) {
-      u.waveColor.value.set(...waveColor);
-      prevColor.current = [...waveColor];
-    }
-
+    u.waveSpeed.value = waveSpeed;
+    u.waveFrequency.value = waveFrequency;
+    u.waveAmplitude.value = waveAmplitude;
+    (u.waveColor.value as THREE.Color).set(waveColor[0], waveColor[1], waveColor[2]);
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
 
@@ -276,7 +280,7 @@ function DitheredWaves({
         <shaderMaterial
           vertexShader={waveVertexShader}
           fragmentShader={waveFragmentShader}
-          uniforms={waveUniformsRef.current}
+          uniforms={initialUniforms}
         />
       </mesh>
 
@@ -296,7 +300,6 @@ function DitheredWaves({
     </>
   );
 }
-
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
