@@ -25,7 +25,7 @@ export default function Home() {
         </section>
 
         {/* 右：白色背景盖住波纹 + 内容 */}
-        <section className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[35vw]">
+        <section className="theme-light flex h-[56%] items-center bg-white text-ink lg:h-full lg:w-[35vw]">
           <div className="w-full max-w-xl px-7 lg:px-14">
 
             <h1 className="mt-[clamp(0.75rem,2.5vh,1.5rem)] text-[clamp(2rem,min(4.4vw,8.5vh),4rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
