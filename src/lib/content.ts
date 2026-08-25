@@ -16,9 +16,9 @@ export const site = {
 
 export const hero = {
   eyebrow: "公测开放 · 两个平台都可以装",
-  headline: ["活给 Otto，", "人去过日子。"],
+  headline: ["活给 Otto，", "脑子随便换。"],
   subhead:
-    "Otto 在你自己机器上干活：读文件、跑 bash、搜网页。每一步都记进日志，危险的那几步它不敢动，等你回来点头。",
+    "Otto 在你自己机器上干活：读文件、跑 bash、搜网页，每一步都记进日志，危险的那几步先等你回来点头。OpenAI、Claude、DeepSeek、Qwen……想用哪个模型，随你换。",
 } as const;
 
 /**
