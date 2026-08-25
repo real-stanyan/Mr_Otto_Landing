@@ -6,12 +6,12 @@ import { downloads } from "@/lib/content";
  */
 export function DownloadButtons() {
   return (
-    <ul className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+    <ul className="grid gap-3 sm:grid-cols-2">
       {downloads.items.map((item) => {
         const available = item.href.length > 0;
         const label = available ? `下载 for ${item.os}` : `${item.os} ${downloads.pending}`;
 
-        const shape = "pressable flex items-center gap-3 border px-5 py-3.5 border-ink bg-ink text-paper hover:opacity-90";
+        const shape = "pressable flex w-full items-center justify-center gap-3 border px-5 py-3.5 border-ink bg-ink text-paper hover:opacity-90";
         const inner = (
           <>
             <OsIcon name={item.icon} />

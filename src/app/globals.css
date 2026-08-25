@@ -96,6 +96,15 @@ body {
   --orbit-dur: 26s;
 }
 
+/* 桌面端等比例放大头像+轨道+logo：scale 作用整个 stage，offset-path 随之缩放，
+   不用逐条重写椭圆路径。transform 不占布局，flex 居中下视觉正好居中。 */
+@media (min-width: 1024px) {
+  .otto-stage {
+    transform: scale(1.35);
+    transform-origin: center;
+  }
+}
+
 .otto-head {
   position: relative;
   z-index: 4;
