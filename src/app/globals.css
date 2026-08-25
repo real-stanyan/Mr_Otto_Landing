@@ -83,7 +83,8 @@ body {
 
 /* ————— 脑壳开瓢轨道 —————
    reactbits OrbitImages 的思路（offset-path 椭圆 + 均匀相位差），但用纯 CSS
-   动画实现：不依赖 motion 库，跑在合成线程上，首屏加载再忙也不掉帧。
+   动画实现：不依赖 motion 库。但它不是免费的 —— offset-distance 和 z-index
+   都不走合成器，这条动画每帧都在主线程上排布，主线程一卡这个环就跟着卡。
 
    坐标是相对 .otto-stage 的像素值，所以头像尺寸只在两档断点之间切，
    路径跟着断点一起换。椭圆本身带 -6° 的 x-axis-rotation，环是歪的，
