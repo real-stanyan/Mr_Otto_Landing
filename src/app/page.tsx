@@ -1,7 +1,7 @@
 import Dither from "@/components/dither-background";
 import { DownloadButtons } from "@/components/download-buttons";
 import { OttoOrbit } from "@/components/otto-orbit";
-import { hero, models, notify } from "@/lib/content";
+import { hero, notify } from "@/lib/content";
 
 /**
  * 分屏一屏：左边深色 Dither 波纹 + 脑壳开瓢头像，右边白色背景 + 文案下载。
@@ -22,18 +22,11 @@ export default function Home() {
         {/* 左：深色波纹 + 头像 */}
         <section className="flex h-[44%] shrink-0 flex-col items-center justify-center gap-3 lg:h-full lg:w-[65vw]">
           <OttoOrbit />
-          <p className="font-mono text-[11px] tracking-[0.16em] text-ink-faint">
-            {models.caption}
-          </p>
         </section>
 
         {/* 右：白色背景盖住波纹 + 内容 */}
         <section className="theme-light flex h-[56%] items-center bg-white lg:h-full lg:w-[35vw]">
           <div className="w-full max-w-xl px-7 lg:px-14">
-            <p className="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.18em] text-ink-soft uppercase sm:text-[12px]">
-              <span className="inline-block size-1.5 bg-brand" aria-hidden />
-              {hero.eyebrow}
-            </p>
 
             <h1 className="mt-[clamp(0.75rem,2.5vh,1.5rem)] text-[clamp(2rem,min(4.4vw,8.5vh),4rem)] leading-[0.98] font-semibold tracking-[-0.045em]">
               {hero.headline[0]}
