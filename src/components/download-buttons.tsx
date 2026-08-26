@@ -1,44 +1,60 @@
 import { downloads } from "@/lib/content";
 
 /**
- * 两个安装口。`href` 为空的平台还没有产物，渲染成不可点的"即将开放"，
- * 但位置一直占着 —— 免得发布当天再来改版式。
+ * 两个安装口 + 底下一行版本号。`href` 为空的平台还没有产物，渲染成不可点的
+ * "即将开放"，但位置一直占着 —— 免得发布当天再来改版式。
  */
 export function DownloadButtons() {
   return (
-    <ul className="grid gap-3 sm:grid-cols-2">
-      {downloads.items.map((item) => {
-        const available = item.href.length > 0;
-        const label = available ? `下载 for ${item.os}` : `${item.os} ${downloads.pending}`;
+    <div>
+      <ul className="grid gap-3 sm:grid-cols-2">
+        {downloads.items.map((item) => {
+          const available = item.href.length > 0;
+          const label = available ? `下载 for ${item.os}` : `${item.os} ${downloads.pending}`;
 
-        const shape = "pressable flex w-full items-center justify-center gap-3 border px-5 py-3.5 border-ink bg-ink text-paper hover:opacity-90";
-        const inner = (
-          <>
-            <OsIcon name={item.icon} />
-            <span className="flex flex-col items-start leading-tight">
-              <span className="text-[15px] font-medium">{label}</span>
-              <span className="mt-1 font-mono text-[11px] tracking-[0.1em] text-ink-faint">
-                {item.note}
+          const shape = "pressable flex w-full items-center justify-center gap-3 border px-5 py-3.5 border-ink bg-ink text-paper hover:opacity-90";
+          const inner = (
+            <>
+              <OsIcon name={item.icon} />
+              <span className="flex flex-col items-start leading-tight">
+                <span className="text-[15px] font-medium">{label}</span>
+                <span className="mt-1 font-mono text-[11px] tracking-[0.1em] text-ink-faint">
+                  {item.note}
+                </span>
               </span>
-            </span>
-          </>
-        );
+            </>
+          );
 
-        return (
-          <li key={item.os}>
-            {available ? (
-              <a href={item.href} className={shape}>
-                {inner}
-              </a>
-            ) : (
-              <span aria-disabled="true" className={`${shape} cursor-default border-line bg-transparent text-ink-soft`}>
-                {inner}
-              </span>
-            )}
-          </li>
-        );
+          return (
+            <li key={item.os}>
+              {available ? (
+                <a href={item.href} className={shape}>
+                  {inner}
+                </a>
+              ) : (
+                <span aria-disabled="true" className={`${shape} cursor-default border-line bg-transparent text-ink-soft`}>
+                  {inner}
+                </span>
+              )}
+            </li>
+          );
       })}
-    </ul>
+      </ul>
+
+      {/* 版本行：安装口正下方，点进去是这一版的 release notes。 */}
+      <p className="mt-3 font-mono text-[11px] tracking-[0.1em] text-ink-faint">
+        <a
+          href={downloads.releaseUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="transition-colors duration-150 ease-out hover:text-ink-soft"
+        >
+          v{downloads.version}
+        </a>
+        <span className="mx-2 opacity-50">·</span>
+        {downloads.releasedOn}
+      </p>
+    </div>
   );
 }
 

@@ -43,22 +43,29 @@ export const models: { caption: string; items: ModelLogo[] } = {
 };
 
 /**
- * 安装口。href 为空 = 该平台还没有产物，按"即将开放"渲染；
- * 有了安装包把链接填进来就自动变成可点的下载按钮，版式不用动。
+ * 安装口。版本号是单一事实源：`version` 一改，两个下载链接和页脚版本行一起跟着走。
+ * href 为空 = 该平台还没有产物，按"即将开放"渲染。
  */
+const version = "1.0.8";
+const releaseBase = `https://github.com/real-stanyan/Mr-Otto/releases`;
+
 export const downloads = {
+  version,
+  /** 版本行点进去是这一版的 release notes。 */
+  releaseUrl: `${releaseBase}/tag/v${version}`,
+  releasedOn: "2026-08-26",
   items: [
     {
       os: "macOS",
       icon: "apple",
       note: "Apple Silicon · .dmg",
-      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.6/Mr.Otto-1.0.6-arm64.dmg",
+      href: `${releaseBase}/download/v${version}/Mr.Otto-${version}-arm64.dmg`,
     },
     {
       os: "Windows",
       icon: "windows",
       note: "Windows 10 及以上 · x64 · .exe",
-      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.6/Mr.Otto-1.0.6-win-x64-setup.exe",
+      href: `${releaseBase}/download/v${version}/Mr.Otto-${version}-win-x64-setup.exe`,
     },
   ],
   pending: "即将开放",
