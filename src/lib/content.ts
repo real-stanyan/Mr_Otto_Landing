@@ -43,6 +43,16 @@ export const models: { caption: string; items: ModelLogo[] } = {
 };
 
 /**
+ * 发版后只改这一行。两个平台的下载链接都从它拼出来 ——
+ * 之前 mac / win 各写死一条完整 URL，改的时候漏掉一条不会报错，
+ * 页面照常渲染、只是把人送去旧版本，落地页因此在 v1.0.9 上滞留了三个版本。
+ * 资产名的形状由 app 仓的 electron-builder.yml 钉死（artifactName），动它要两边一起改。
+ */
+export const appVersion = "1.1.1";
+
+const releaseBase = `https://github.com/real-stanyan/Mr-Otto/releases/download/v${appVersion}`;
+
+/**
  * 安装口。href 为空 = 该平台还没有产物，按"即将开放"渲染；
  * 有了安装包把链接填进来就自动变成可点的下载按钮，版式不用动。
  */
@@ -52,13 +62,13 @@ export const downloads = {
       os: "macOS",
       icon: "apple",
       note: "Apple Silicon · .dmg",
-      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.9/Mr.Otto-1.0.9-arm64.dmg",
+      href: `${releaseBase}/Mr.Otto-${appVersion}-arm64.dmg`,
     },
     {
       os: "Windows",
       icon: "windows",
       note: "Windows 10 及以上 · x64 · .exe",
-      href: "https://github.com/real-stanyan/Mr-Otto/releases/download/v1.0.9/Mr.Otto-1.0.9-win-x64-setup.exe",
+      href: `${releaseBase}/Mr.Otto-${appVersion}-win-x64-setup.exe`,
     },
   ],
   pending: "即将开放",
