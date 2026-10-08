@@ -43,14 +43,12 @@ export const models: { caption: string; items: ModelLogo[] } = {
 };
 
 /**
- * 发版后只改这一行。两个平台的下载链接都从它拼出来 ——
- * 之前 mac / win 各写死一条完整 URL，改的时候漏掉一条不会报错，
- * 页面照常渲染、只是把人送去旧版本，落地页因此在 v1.0.9 上滞留了三个版本。
- * 资产名的形状由 app 仓的 electron-builder.yml 钉死（artifactName），动它要两边一起改。
+ * 桌面端安装包（新的 Otto 桌面版，otto 仓的 desktop/）。链接是**固定名**：每次发版覆盖同一个文件，
+ * 所以这里不带版本号、发版后不用回来改——原来按版本号拼 GitHub Release 的地址，落地页在旧版本上滞留过三个版本。
+ * 文件放在私有 R2 桶里，经 edge 的 /desktop/<文件名> 只读下发（otto 仓 desktop/README.md「发布」）。
+ * 文件名由 otto 仓的 desktop/electron-builder.yml 与 scripts/r2-upload.mjs 钉死，动它要两边一起改。
  */
-export const appVersion = "1.1.1";
-
-const releaseBase = `https://github.com/real-stanyan/Mr-Otto/releases/download/v${appVersion}`;
+const desktopBase = "https://edge.mrotto.agency/desktop";
 
 /**
  * 安装口。href 为空 = 该平台还没有产物，按"即将开放"渲染；
@@ -61,14 +59,20 @@ export const downloads = {
     {
       os: "macOS",
       icon: "apple",
-      note: "Apple Silicon · .dmg",
-      href: `${releaseBase}/Mr.Otto-${appVersion}-arm64.dmg`,
+      note: "Apple 芯片 · .dmg",
+      href: `${desktopBase}/Otto-mac-arm64.dmg`,
+    },
+    {
+      os: "macOS Intel",
+      icon: "apple",
+      note: "Intel 芯片 · .dmg",
+      href: `${desktopBase}/Otto-mac-x64.dmg`,
     },
     {
       os: "Windows",
       icon: "windows",
       note: "Windows 10 及以上 · x64 · .exe",
-      href: `${releaseBase}/Mr.Otto-${appVersion}-win-x64-setup.exe`,
+      href: `${desktopBase}/Otto-Setup.exe`,
     },
   ],
   pending: "即将开放",
